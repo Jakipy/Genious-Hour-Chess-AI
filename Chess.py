@@ -18,15 +18,18 @@ white_pos_val, black_pos_val = (0,0)
 
 def calculatepos(fen,chess_val):
   global white_pos_val,black_pos_val
-  for i in fen:
-    if i.isupper() == True and i != "8" and i != "/":
-      white_pos_val = white_pos_val + chess_val[i]
-    if i.isupper() == False and i != "8" and i != "/":
-      black_pos_val = black_pos_val + chess_val[i]
+  for i in range(len(fen)):
+    if fen[i] in chess_val and fen[i].isupper() == True:
+      white_pos_val = white_pos_val + chess_val[fen[i]]
+    elif fen[i] in chess_val and fen[i].isupper() == False:
+      black_pos_val = black_pos_val + chess_val[fen[i]]
+    else:
+      pass
       
   total_val = white_pos_val - black_pos_val
   print(total_val,white_pos_val,black_pos_val)
 
+  
 
 # black is the minimizer and white is the maximizer
 print("hello world")
@@ -52,11 +55,16 @@ def loadimages():
 
   return(Images)
 
+squaresize = 100
+white = (255,255,255)
+black = (0,0,0)
+rows = col = 8
 def drawsquare(screen):
-  color = (255,0,0)
-  for x in range(8):
-    if x%2 == 0:
-      pass
+    screen.fill(white)
+    for row in range(rows):
+        for col in range(row % 2, rows, 2):
+            pygame.draw.rect(screen, black, (col * squaresize, row*squaresize, squaresize, squaresize))
+
       # next time
       # figure out efficent method to represent the board for user
 # drawing 8 by 8 grid
@@ -71,11 +79,11 @@ while running:
   main()
   drawsquare(screen)
   #loadimages()
-  #calculatepos(fen,chess_val)
-
+  calculatepos(fen,chess_val)
+  pygame.display.update()
  
   
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
-pygame.display.update()
+pygame.quit()
