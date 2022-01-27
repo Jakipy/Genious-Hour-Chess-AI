@@ -1,4 +1,3 @@
-
 import pygame
 import itertools
 
@@ -36,8 +35,9 @@ print("hello world")
 #from Chess import engine
 Images = {}
 running = True
-(width, height) = (800, 800)
+(width, height) = (400, 400)
 screen = pygame.display.set_mode((width, height))
+
 # starting window
 #background_colour = (255, 0, 0) # background color white
 def main():
@@ -49,21 +49,64 @@ def main():
 
   
 def loadimages():
-  pieces = ["p","r","n","b","k","q","P2","R2","N2","B2","K2","Q2"]
-  for names in pieces:
-    Images[names] = pygame.image.load("Chess_"+pieces+".png")
+  chessboard = [
+            ["r","n","b","k","q","b","n","r"],
+            ["p","p","p","p","p","p","p","p"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["P2","P2","P2","P2","P2","P2","P2","P2"],
+            ["R2","N2","B2","K2","Q2","B2","N2","R2"],
 
-  return(Images)
+        ]
+  positionx = -1
+  positiony = -1
 
-squaresize = 100
+  for x in chessboard:
+    #print(x)
+    positionx += 1
+    #print("Positionx",positionx)
+    for y in x:
+      print(y)
+      positiony += 1
+      if(y != "/"):
+        #print("positiony",positionx)
+        #print(y,'Chess_'+ y +'.png')
+        image = pygame.image.load('Chess_'+y+'.png')
+        screen.blit(image, (positiony * squaresize, positionx * squaresize))
+
+
+  
+                                                            
+  
+  #for x in range(0,len(pieces_white)):
+    #image = pygame.image.load('Chess_'+pieces_white[x]+'.png')
+    #print(x,'Chess_'+pieces_white[x]+'.png')
+    #screen.blit(image, (x * squaresize, positiony))
+    #if x>7:
+      #screen.blit(image, (200, positiony * squaresize))
+    
+  
+      
+      
+        
+
+  
+  #for names in pieces:
+    #Images[names] = pygame.image.load("Chess_"+pieces+".png")
+
+  #return(Images)
+
+squaresize = 50
 white = (255,255,255)
-black = (0,0,0)
+forest_green = (34,139,34) # forest_green
 rows = col = 8
 def drawsquare(screen):
     screen.fill(white)
     for row in range(rows):
         for col in range(row % 2, rows, 2):
-            pygame.draw.rect(screen, black, (col * squaresize, row*squaresize, squaresize, squaresize))
+            pygame.draw.rect(screen, forest_green, (col * squaresize, row*squaresize, squaresize, squaresize))
 
       # next time
       # figure out efficent method to represent the board for user
@@ -78,8 +121,8 @@ def drawsquare(screen):
 while running:
   main()
   drawsquare(screen)
-  #loadimages()
-  calculatepos(fen,chess_val)
+  loadimages()
+  #calculatepos(fen,chess_val)
   pygame.display.update()
  
   
