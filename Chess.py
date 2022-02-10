@@ -1,5 +1,39 @@
+
 import pygame
 import itertools
+
+
+
+class Gamestate():
+    def __init__(self,startsquarex, startsquarey, endsquarex,endsquarey):
+      self.startsquarex = startsquarex
+      self.startsquarey = startsquarey
+      self.endsquarex = endsquarex
+      self.endsquarey = endsquarey
+      
+      self.board = [
+            ["bR","bN","bB","bQ","bK","bB","bN","bR"],
+            ["bP","bP","bP","bP","bP","bP","bP","bP"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["/","/","/","/","/","/","/","/"],
+            ["wP","wP","wP","wP","wP","wP","wP","wP"],
+            ["wR","wN","wB","wQ","wK","wB","wN","wR"],
+
+        ]
+    def inboard(self,):
+      for x in range(8):
+        for y in range(8):
+          return self.board[self.startsquarex][self.startsquarey]
+
+a = Gamestate(3,4,4,3)
+print(a)
+
+
+
+
+
 
 fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 chess_val = {"p":1,"r":5,"n":3,"b":3,"q":9,"k":10000,"P":1,"R":5,"N":3,"B":3,"Q":9,"K":10000}
@@ -12,6 +46,15 @@ count = 0 # odd number white's turn, even number balck's turn
 if count == 50:
   print("draw") # exit the program
 
+def movepieces(running):
+  x,y = (0,0)
+  blackturn = False
+  whiteturn = False
+  ev = pygame.event.get()
+  for event in ev:
+    if event.type == pygame.MOUSEBUTTONUP:
+      x,y = pygame.mouse.get_pos()
+      print(x,y)
 
 white_pos_val, black_pos_val = (0,0)
 
@@ -31,22 +74,50 @@ def calculatepos(fen,chess_val):
   
 
 # black is the minimizer and white is the maximizer
-print("hello world")
+#print("hello world")
 #from Chess import engine
 Images = {}
 running = True
 (width, height) = (400, 400)
 screen = pygame.display.set_mode((width, height))
+squaresize = height // 8
 
 # starting window
 #background_colour = (255, 0, 0) # background color white
 def main():
-  
+  global running
   global screen
   pygame.display.set_caption('Chess Game')
-  #gs = engine.Gamestate()
-  # screen.fill((0,0,0))
+  squareselect = ()
+  playerclick = []
 
+  while running:
+    
+    drawsquare(screen)
+    loadimages()
+    movepieces(running)
+    #calculatepos(fen,chess_val)
+    pygame.display.update()
+
+  
+    
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        running = False
+      elif event.type == pygame.MOUSEBUTTONDOWN:
+        location = pygame.mouse.get_pos()
+        col = location[0]//squaresize
+        row = location[1]//squaresize
+        if(squareselect == (row,col)):
+          squareselect = ()
+        else:
+          squareselect = (row,col)
+          playerclick.append(squareselect)
+
+        if len(playerclick) == 2:
+          pass
+        #make a move
+  pygame.quit()
   
 def loadimages():
   chessboard = [
@@ -58,23 +129,14 @@ def loadimages():
             ["/","/","/","/","/","/","/","/"],
             ["P2","P2","P2","P2","P2","P2","P2","P2"],
             ["R2","N2","B2","K2","Q2","B2","N2","R2"],
-
         ]
-  positionx = -1
-  positiony = -1
-
-  for x in chessboard:
-    #print(x)
-    positionx += 1
-    #print("Positionx",positionx)
-    for y in x:
-      print(y)
-      positiony += 1
-      if(y != "/"):
-        #print("positiony",positionx)
-        #print(y,'Chess_'+ y +'.png')
-        image = pygame.image.load('Chess_'+y+'.png')
-        screen.blit(image, (positiony * squaresize, positionx * squaresize))
+  for x in range(8):
+    #print("y",x)
+    for y in range(8):
+      #print("y",y)
+      if(chessboard[x][y] != "/"):
+        image = pygame.image.load('Chess_'+ chessboard[x][y] +'.png')
+        screen.blit(image, pygame.Rect(y * squaresize - 5, squaresize * x - 5, squaresize,squaresize))
 
 
   
@@ -98,7 +160,7 @@ def loadimages():
 
   #return(Images)
 
-squaresize = 50
+
 white = (255,255,255)
 forest_green = (34,139,34) # forest_green
 rows = col = 8
@@ -118,15 +180,5 @@ def drawsquare(screen):
 # lower case black pieces
 # / next row start from 8th row
 
-while running:
-  main()
-  drawsquare(screen)
-  loadimages()
-  #calculatepos(fen,chess_val)
-  pygame.display.update()
- 
-  
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
+#main()
 pygame.quit()
